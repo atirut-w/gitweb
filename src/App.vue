@@ -1,4 +1,7 @@
 <script lang='ts'>
+import git from 'isomorphic-git'
+import DirFs from './DirFs.ts'
+
 export default {
     data() {
         return {
@@ -8,7 +11,11 @@ export default {
         async openRepo() {
             try {
                 var dir = await window.showDirectoryPicker({mode: "readwrite"});
-                console.log(dir);
+                var fs = new DirFs(dir);
+                console.log(await git.currentBranch({
+                    fs,
+                    dir: '',
+                }));
             } catch (e) {
                 console.log(e);
             }
