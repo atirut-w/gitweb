@@ -5,7 +5,7 @@ export default class DirFs {
     this.handle = handle;
   }
 
-  async resolve(path: String) {
+  async resolve(path: String): FileSystemFileHandle {
     var parts = path.split("/");
     var current = this.handle;
 

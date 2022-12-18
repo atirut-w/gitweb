@@ -11,7 +11,7 @@ export default {
     async openRepo() {
       var dir = await window.showDirectoryPicker({ mode: "readwrite" });
       var repo = new Repository(dir);
-      console.log(await repo.fs.resolve("README.md"));
+      console.log(await repo.currentBranch());
     },
   },
 };
