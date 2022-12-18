@@ -1,90 +1,70 @@
 export default class DirFs {
-    handle: FileSystemDirectoryHandle;
+  handle: FileSystemDirectoryHandle;
 
-    constructor(dirh: FileSystemDirectoryHandle) {
-        this.handle = dirh;
-    }
+  constructor(dirh: FileSystemDirectoryHandle) {
+    this.handle = dirh;
+  }
 
-    async resolve(path: String) {
-        var parts = path.split('/')
-        var current = this.handle
+  async resolve(path: String) {
+    var parts = path.split("/");
+    var current = this.handle;
 
-        for (const part of parts) {
-            if (part == parts[parts.length - 1]) {
-                for await (const [key, value] of current.entries()) {
-                    if (key == part) {
-                        console.log("Resolved " + path)
-                        return await current.getFileHandle(key)
-                    }
-                }
-            } else {
-                for await (const [key, value] of current.entries()) {
-                    if (key == part) {
-                        current = await current.getDirectoryHandle(key)
-
-                        continue;
-                    }
-                }
-            }
+    for (const part of parts) {
+      if (part == parts[parts.length - 1]) {
+        for await (const [key, value] of current.entries()) {
+          if (key == part) {
+            console.log("Resolved " + path);
+            return await current.getFileHandle(key);
+          }
         }
+      } else {
+        for await (const [key, value] of current.entries()) {
+          if (key == part) {
+            current = await current.getDirectoryHandle(key);
 
-        console.error("Could not resolve " + path)
-    }
-
-    ret(opt, cb, val) {
-        if (cb == null) {
-            opt(val)
-        } else {
-            cb(val)
+            continue;
+          }
         }
+      }
     }
 
-    readFile(path: String, options, callback) {
-        this.resolve(path).then((handle) => {
-            if (handle != null) {
-                console.log(handle)
-            }
-            this.ret(options, callback)
-        })
+    console.error("Could not resolve " + path);
+  }
+
+  ret(opt, cb, val) {
+    if (cb == null) {
+      opt(val);
+    } else {
+      cb(val);
     }
+  }
 
-    writeFile(file: String, data) {
+  readFile(path: String, options, callback) {
+    this.resolve(path).then((handle) => {
+      if (handle != null) {
+        console.log(handle);
+      }
+      this.ret(options, callback);
+    });
+  }
 
-    }
+  writeFile(file: String, data) {}
 
-    unlink(path: String) {
+  unlink(path: String) {}
 
-    }
+  readdir(path: String) {}
 
-    readdir(path: String) {
+  mkdir(path: String) {}
 
-    }
+  rmdir(path: String) {}
 
-    mkdir(path: String) {
+  stat(path: String) {}
 
-    }
+  lstat(path: String) {}
 
-    rmdir(path: String) {
+  readlink(path: String) {}
 
-    }
+  symlink(target: String, path: String) {}
 
-    stat(path: String) {
-
-    }
-
-    lstat(path: String) {
-
-    }
-
-    readlink(path: String) {
-
-    }
-
-    symlink(target: String, path: String) {
-
-    }
-
-    chmod(path: String) {
-
-    }
+  chmod(path: String) {}
 }
