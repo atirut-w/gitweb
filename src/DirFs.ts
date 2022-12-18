@@ -1,70 +1,66 @@
 export default class DirFs {
-  handle: FileSystemDirectoryHandle;
-
   constructor(dirh: FileSystemDirectoryHandle) {
-    this.handle = dirh;
+    this.promises.handle = dirh;
   }
 
-  async resolve(path: String) {
-    var parts = path.split("/");
-    var current = this.handle;
+  promises = {
+    async resolve(path: String): FileSystemFileHandle {
+      var parts = path.split("/");
+      var current = this.handle;
 
-    for (const part of parts) {
-      if (part == parts[parts.length - 1]) {
-        for await (const [key, value] of current.entries()) {
-          if (key == part) {
-            console.debug(`Resolved file handle for "${path}"`);
-            return await current.getFileHandle(key);
+      for (const part of parts) {
+        if (part == parts[parts.length - 1]) {
+          for await (const [key, value] of current.entries()) {
+            if (key == part) {
+              console.debug(`Resolved file handle for "${path}"`);
+              return await current.getFileHandle(key);
+            }
           }
-        }
-      } else {
-        for await (const [key, value] of current.entries()) {
-          if (key == part) {
-            current = await current.getDirectoryHandle(key);
+        } else {
+          for await (const [key, value] of current.entries()) {
+            if (key == part) {
+              current = await current.getDirectoryHandle(key);
 
-            continue;
+              continue;
+            }
           }
         }
       }
-    }
 
-    throw new Error(`Could not resolve "${path}"`);
-  }
+      throw new Error(`Could not resolve "${path}"`);
+    },
 
-  ret(opt, cb, val) {
-    if (cb == null) {
-      opt(val);
-    } else {
-      cb(val);
-    }
-  }
+    async getFile(path: String): File {
+      return (await this.resolve(path)).getFile();
+    },
 
-  readFile(path: String, options, callback) {
-    this.resolve(path).then((handle) => {
-      if (handle != null) {
-        console.log(handle);
+    async readFile(path: String, options) {
+      try {
+        var file = await this.getFile(path);
+        return await file.text();
+      } catch (e) {
+        console.error(e.message);
       }
-      this.ret(options, callback);
-    });
-  }
+    },
 
-  writeFile(file: String, data) {}
+    async writeFile(file: String, data) {},
 
-  unlink(path: String) {}
+    async unlink(path: String) {},
 
-  readdir(path: String) {}
+    async readdir(path: String) {},
 
-  mkdir(path: String) {}
+    async mkdir(path: String) {},
 
-  rmdir(path: String) {}
+    async rmdir(path: String) {},
 
-  stat(path: String) {}
+    async stat(path: String) {},
 
-  lstat(path: String) {}
+    async lstat(path: String) {},
 
-  readlink(path: String) {}
+    async readlink(path: String) {},
 
-  symlink(target: String, path: String) {}
+    async symlink(target: String, path: String) {},
 
-  chmod(path: String) {}
+    async chmod(path: String) {},
+  };
 }
