@@ -13,7 +13,7 @@ export default class DirFs {
       if (part == parts[parts.length - 1]) {
         for await (const [key, value] of current.entries()) {
           if (key == part) {
-            console.log("Resolved " + path);
+            console.debug(`Resolved file handle for "${path}"`);
             return await current.getFileHandle(key);
           }
         }
@@ -28,7 +28,7 @@ export default class DirFs {
       }
     }
 
-    console.error("Could not resolve " + path);
+    throw new Error(`Could not resolve "${path}"`);
   }
 
   ret(opt, cb, val) {
