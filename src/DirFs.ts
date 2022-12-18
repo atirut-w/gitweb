@@ -20,7 +20,6 @@ export default class DirFs {
       } else {
         for await (const [key, value] of current.entries()) {
           if (key == part) {
-            console.debug("Entering " + key);
             current = await current.getDirectoryHandle(key);
             continue;
           }

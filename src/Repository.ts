@@ -12,8 +12,10 @@ export default class Repository {
     var ref = (await file.text()).replace(/^\W+|\W+$/g, "");
     
     if (ref.startsWith("ref: ")) {
+      console.debug(`${path} is an indirect reference. Resolving ${ref.substring(5)}.`)
       return await this.resolveRef(ref.substring(5))
     } else {
+      console.debug(`Resolved ref "${path}" as ${ref}.`)
       return ref
     }
   }
