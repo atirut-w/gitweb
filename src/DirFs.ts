@@ -27,7 +27,7 @@ export default class DirFs {
         }
       }
 
-      throw new Error(`Could not resolve "${path}"`);
+      throw new Error(`Could not resolve file handler for "${path}"`);
     },
 
     async getFile(path: String): File {
