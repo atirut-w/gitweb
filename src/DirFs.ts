@@ -30,4 +30,8 @@ export default class DirFs {
 
     throw new Error(`Could not resolve "${path}"`);
   }
+
+  async getFile(path: String) {
+    return (await this.resolve(path)).getFile();
+  }
 }
