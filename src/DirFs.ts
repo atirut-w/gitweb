@@ -1,8 +1,8 @@
 export default class DirFs {
   handle: FileSystemDirectoryHandle;
 
-  constructor(dirh: FileSystemDirectoryHandle) {
-    this.handle = dirh;
+  constructor(handle: FileSystemDirectoryHandle) {
+    this.handle = handle;
   }
 
   async resolve(path: String) {
@@ -20,8 +20,8 @@ export default class DirFs {
       } else {
         for await (const [key, value] of current.entries()) {
           if (key == part) {
+            console.debug("Entering " + key);
             current = await current.getDirectoryHandle(key);
-
             continue;
           }
         }
@@ -30,41 +30,4 @@ export default class DirFs {
 
     throw new Error(`Could not resolve "${path}"`);
   }
-
-  ret(opt, cb, val) {
-    if (cb == null) {
-      opt(val);
-    } else {
-      cb(val);
-    }
-  }
-
-  readFile(path: String, options, callback) {
-    this.resolve(path).then((handle) => {
-      if (handle != null) {
-        console.log(handle);
-      }
-      this.ret(options, callback);
-    });
-  }
-
-  writeFile(file: String, data) {}
-
-  unlink(path: String) {}
-
-  readdir(path: String) {}
-
-  mkdir(path: String) {}
-
-  rmdir(path: String) {}
-
-  stat(path: String) {}
-
-  lstat(path: String) {}
-
-  readlink(path: String) {}
-
-  symlink(target: String, path: String) {}
-
-  chmod(path: String) {}
 }
