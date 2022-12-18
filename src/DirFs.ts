@@ -5,47 +5,86 @@ export default class DirFs {
         this.handle = dirh;
     }
 
-    readFile() {
+    async resolve(path: String) {
+        var parts = path.split('/')
+        var current = this.handle
+
+        for (const part of parts) {
+            if (part == parts[parts.length - 1]) {
+                for await (const [key, value] of current.entries()) {
+                    if (key == part) {
+                        console.log("Resolved " + path)
+                        return await current.getFileHandle(key)
+                    }
+                }
+            } else {
+                for await (const [key, value] of current.entries()) {
+                    if (key == part) {
+                        current = await current.getDirectoryHandle(key)
+
+                        continue;
+                    }
+                }
+            }
+        }
+
+        console.error("Could not resolve " + path)
+    }
+
+    ret(opt, cb, val) {
+        if (cb == null) {
+            opt(val)
+        } else {
+            cb(val)
+        }
+    }
+
+    readFile(path: String, options, callback) {
+        this.resolve(path).then((handle) => {
+            if (handle != null) {
+                console.log(handle)
+            }
+            this.ret(options, callback)
+        })
+    }
+
+    writeFile(file: String, data) {
 
     }
 
-    writeFile() {
+    unlink(path: String) {
 
     }
 
-    unlink() {
+    readdir(path: String) {
 
     }
 
-    readdir() {
+    mkdir(path: String) {
 
     }
 
-    mkdir() {
+    rmdir(path: String) {
 
     }
 
-    rmdir() {
+    stat(path: String) {
 
     }
 
-    stat() {
+    lstat(path: String) {
 
     }
 
-    lstat() {
+    readlink(path: String) {
 
     }
 
-    readlink() {
+    symlink(target: String, path: String) {
 
     }
 
-    symlink() {
+    chmod(path: String) {
 
-    }
-
-    chmod() {
-        
     }
 }
