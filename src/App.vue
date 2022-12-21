@@ -26,5 +26,13 @@ export default {
 </script>
 
 <template>
-  <button @click="openRepo">Open a repository</button>
+  <nav class="m l left">
+    <a @click="openRepo();">
+      <i>file_open</i>
+      <span>Open a repository</span>
+    </a>
+  </nav>
+  <main class="large-space responsive">
+    <p>TODO: Git timeline</p>
+  </main>
 </template>
